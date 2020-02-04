@@ -7,9 +7,12 @@ import {ConfigService} from 'src/app/config/config.service';
   styleUrls: ['./app-view.component.sass']
 })
 export class AppViewComponent implements OnInit {
-
-  githubEventsConfig: any
   collection: any
+  config: any = [
+    {
+      year: 2018,
+    }
+  ]
 
   constructor(private service: ConfigService) {
   }
