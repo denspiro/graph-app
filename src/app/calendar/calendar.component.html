@@ -1,1 +1,11 @@
-<svg width="100%" #svgContent xmlns="http://www.w3.org/2000/svg"></svg>
+<div class="grid">
+  <ng-container *ngFor="let calendarItem of calendarItems">
+    <ng-container *ngIf="calendarItem.date.getDate() == 1">
+      <months-row class="month-row" [calendarMonth]="calendarItem.date"></months-row>
+    </ng-container>
+    <calendar-item [calendarItem]="calendarItem"></calendar-item>
+  </ng-container>
+</div>
+<ng-container *ngIf="collection && !collection.length">
+  <h1 class="empty-state">⛱ Nothing here</h1>
+</ng-container>

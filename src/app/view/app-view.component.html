@@ -1,5 +1,17 @@
-<p>view works!</p>
-<button (click)="fetchData(2018)" title="2018">2018</button>
-<button (click)="fetchData(2019)" title="2019">2019</button>
-<button (click)="fetchData(2020)" title="2020">2020</button>
-<calendar [collection]="collection"></calendar>
+<div class="position-block">
+  <div class="d-flex">
+    <img src="assets/github_logo.svg" width="50px"/>
+    <h2>Commits during</h2>
+    <form class="d-flex" [formGroup]="requestForm" (ngSubmit)="getCommits()">
+      <input class="year" type=number placeholder="Enter year" formControlName="year">
+      <h2>in repo</h2>
+      <input class="url" type=string placeholder="Repo address" formControlName="repoUrl" (click)="$event.target.select()">
+      <button class="submit-button" type="submit" [disabled]="!requestForm.valid">
+        <h2 class="button-text">↵ Enter</h2>
+      </button>
+    </form>
+  </div>
+  <calendar
+    [response]="response">
+  </calendar>
+</div>

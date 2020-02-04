@@ -1,0 +1,12 @@
+<pop-up *ngIf="popUpVisibility" [calendarItem]="calendarItem"></pop-up>
+<div
+  (mouseenter)="popUpVisibility = true"
+  (mouseleave)="popUpVisibility = false"
+  class="calendar-item-component calendar-item"
+  [class.empty]="!calendarItem.commits.length"
+  [class.less-than-ten]="calendarItem.percent > 0 && calendarItem.percent < 10"
+  [class.less-than-twenty]="calendarItem.percent >= 10 && calendarItem.percent < 20"
+  [class.less-than-fourty]="calendarItem.percent >= 20 && calendarItem.percent < 40"
+  [class.more-than-fourty]="calendarItem.percent >= 40">
+</div>
+

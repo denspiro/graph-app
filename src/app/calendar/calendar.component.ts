@@ -1,14 +1,15 @@
-import { Component, OnInit, Input, ViewChild, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { Commit, Response } from '../config/config.service';
 
-interface MonthModel {
-  month: string;
-  numberOfDays: number;
-  daysNames: string[];
+export interface CommitsRequest {
+  year: number;
+  repoUrl: string;
 }
 
-interface DateModel {
-  year: number;
-  months: MonthModel [];
+export interface CalendarItem {
+  date: Date;
+  commits: any[];
+  percent: number;
 }
 
 @Component({
@@ -16,53 +17,54 @@ interface DateModel {
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.sass']
 })
-export class CalendarComponent implements OnInit {
-  @Input() collection: any
-  @ViewChild('svgContent', {static: true}) svgContent: ElementRef
-  dateModel: DateModel
-  year: number = 2018
-  totalDays: number = 0
+export class CalendarComponent {
+  @Input() response: Response
 
-  constructor(private rederer: Renderer2) {
+  public calendarItems: CalendarItem[]
+  public collection: Commit[]
+
+  // Define a lifecycle hook to handle changes to the component's input
+  public ngOnChanges(changes: SimpleChanges) {
+    if(changes.response && changes.response.currentValue) {
+      // When the response changes, fetch the commits and update the calendar items
+      this.response.commits.then((commits: Commit[]) => {
+        this.collection = commits
+        this.setItems(this.response.year).appendCommits(commits)
+      })
+    }
   }
 
-  ngOnInit() {
-    this.drawRectGoup()
+  // A method to append commits to the calendar items
+  public appendCommits(commits: Commit[]): void {
+    this.calendarItems.forEach((calendarItem: CalendarItem, idx: number) => {
+      const commitsTmp: string[] = []
+      // For each calendar item, find any commits that occurred on that date
+      commits.forEach(({ commit: { committer: { date }}}) => {
+        if(date.substring(0,10) == calendarItem.date.toISOString().substring(0,10)) {
+          commitsTmp.push(date)
+          this.calendarItems[idx].commits = commitsTmp
+          this.calendarItems[idx].percent = Number.parseFloat(((commitsTmp.length / commits.length) * 100).toPrecision(2))
+        }
+      })
+    })
   }
 
-  getNumberOfDays(month: number) {
-    return new Date(this.year, month, 0).getDate()
-  }
-
-  generateCalendar() {
-
-  }
-
-  drawRectGoup() {
-    for(let month = 1; month <= 12; month++) {
-      for(let i = 0; i < (month * 4.5); i++) {
-        let group: any
-        group = document.createElementNS('http://www.w3.org/2000/svg', "g")
-        group.setAttributeNS(null, 'transform', `translate(${i * 15}, 0)`)
-        this.rederer.appendChild(this.svgContent.nativeElement, group)
-        this.drawRect(group)
+  // A method to initialize the calendar items for a given year
+  public setItems(year: number): CalendarComponent {
+    this.calendarItems = []
+    for (let month = 1; month <= 12; month++) {
+      const numberOfDays: number = new Date(year, month, 0).getDate();
+      // For each month in the year, create calendar items for each day of the month
+      for (let date = 1; date <= numberOfDays; date++) {
+        const dateValue: Date = new Date(year, (month-1), date)
+        this.calendarItems.push({
+          date: dateValue,
+          commits: [],
+          percent: 0,
+        })
       }
     }
+    return this
   }
 
-  drawRect(rectGroup: any) {
-    for (let i = 0; i < 7; i++) {
-      let rect = document.createElementNS('http://www.w3.org/2000/svg', "rect")
-      rect.setAttributeNS(null, 'date-value', '12')
-      rect.setAttributeNS(null, 'width', '12')
-      rect.setAttributeNS(null, 'height', '12')
-      rect.setAttributeNS(null, 'y', `${i * 15}`)
-      rectGroup.appendChild(rect)
-    }
-  }
-
-  /*
-  date = new Date(event.commit.committer.date)
-  console.log(new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(date))
-  */
 }
