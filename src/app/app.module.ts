@@ -17,7 +17,8 @@ import { CalendarItemComponent } from './calendar/calendar-item/calendar-item.co
     BrowserModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

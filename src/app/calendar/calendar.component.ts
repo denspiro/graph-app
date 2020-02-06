@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {ConfigService} from 'src/app/config/config.service';
 
 @Component({
   selector: 'calendar',
@@ -6,14 +7,19 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./calendar.component.sass']
 })
 export class CalendarComponent implements OnInit {
-  @Input() config: any
+  collection: Promise<Object>
   calendarItems: any [] = []
+  sinceDate = new Date(2018, 0, 1)
+  untilDate = new Date(2019, 0, 1)
 
-  constructor() {
+  constructor(private configService: ConfigService) {
   }
 
   ngOnInit() {
     this.setItems()
+    this.configService.getData(this.sinceDate, this.untilDate).subscribe((commits: any) => {
+      this.collection = new Promise((resolve) => resolve(commits))
+    })
   }
 
   getNumberOfDays(year: number, month: number) {
@@ -21,19 +27,16 @@ export class CalendarComponent implements OnInit {
   }
 
   setItems() {
+    let numberOfDays: number
     for (let month = 1; month <= 12; month++) {
-      for (let date = 1; date <= this.getNumberOfDays(2018, month); date++) {
-        debugger
-        console.log(new Date(2018, month, date))
+      numberOfDays = new Date(2018, month, 0).getDate()
+      for (let date = 1; date <= numberOfDays; date++) {
+        let dateValue = new Date(2018, (month-1), date).toISOString()
+        this.calendarItems.push({
+          date: dateValue,
+        })
       }
     }
   }
 
-  generateCalendar() {
-  }
-
-  /*
-  date = new Date(event.commit.committer.date)
-  console.log(new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(date))
-  */
 }
