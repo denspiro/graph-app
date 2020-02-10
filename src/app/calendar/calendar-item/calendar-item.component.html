@@ -1,4 +1,10 @@
-
-<div class="calendar-item-component calendar-item empty" [title]="date.date"></div>
-<p>{{commitInfo | json}}</p>
-<!--<div class="calendar-item-component calendar-item filled"></div>-->
+<ng-container *ngIf="calendarItem.commits.length; else emptySet">
+  <div
+    class="calendar-item-component calendar-item not-empty"
+    [style.opacity]="calendarItem.percent"
+    [title]="calendarItem.commits | json">
+  </div>
+</ng-container>
+<ng-template #emptySet>
+  <div class="calendar-item-component calendar-item empty" [title]="calendarItem.date"></div>
+</ng-template>

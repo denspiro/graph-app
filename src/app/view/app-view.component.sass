@@ -1,0 +1,43 @@
+.position-block
+  margin: 120px auto
+  width: 1070px
+
+.d-flex
+  display: flex
+  align-items: center
+  & > *
+    margin-right: 10px
+
+input
+  height: 40px
+  font-size: 17px
+  font-weight: bold
+  padding-left: 10px
+  border: 4px solid #6a1b9a
+  background-color: #ffc400
+  &.year
+    width: 80px
+  &.url
+    width: 450px
+
+.submit-button
+  height: 40px
+  background-color: #ffc400
+  border: 4px solid #ffc400
+  color: #6a1b9a
+  text-align: center
+  font-weight: bold
+  &:hover:enabled
+    border: 4px solid #6a1b9a
+    cursor: pointer
+  &:active:enabled
+    border: 4px solid #6a1b9a
+    background-color: #6a1b9a
+    cursor: pointer
+    color: #ffc400
+  &:disabled
+    opacity: 0.5
+
+.button-text
+  vertical-align: middle
+  margin: 0

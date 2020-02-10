@@ -1,5 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import {ConfigService} from 'src/app/config/config.service';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+
+export interface Response {
+  year: number;
+  commits: Promise<Object>;
+}
+
+export interface CommitsRequest {
+  year: number;
+  repoUrl: string;
+}
+
+export interface CalendarItem {
+  date: Date;
+  commits: any[];
+  percent: number;
+}
+
 
 @Component({
   selector: 'calendar',
@@ -7,36 +23,52 @@ import {ConfigService} from 'src/app/config/config.service';
   styleUrls: ['./calendar.component.sass']
 })
 export class CalendarComponent implements OnInit {
-  collection: Promise<Object>
-  calendarItems: any [] = []
-  sinceDate = new Date(2018, 0, 1)
-  untilDate = new Date(2019, 0, 1)
+  @Input() response: Response
 
-  constructor(private configService: ConfigService) {
-  }
+  calendarItems: CalendarItem[]
+  collection: any[]
 
   ngOnInit() {
-    this.setItems()
-    this.configService.getData(this.sinceDate, this.untilDate).subscribe((commits: any) => {
-      this.collection = new Promise((resolve) => resolve(commits))
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.response && changes.response.currentValue) {
+      this.response.commits.then((commits: any[]) => {
+        this.collection = commits
+        this.setItems(this.response.year).appendCommits(commits)
+      })
+    }
+  }
+
+  appendCommits(commits: any[]): void {
+    this.calendarItems.forEach((calendarItem: CalendarItem, idx: number) => {
+      let commitsTmp = []
+      commits.forEach((commitData:any) => {
+        if(commitData.commit.committer.date.substring(0,10) == calendarItem.date.toISOString().substring(0,10)) {
+          commitsTmp.push(commitData.commit.committer.date)
+          this.calendarItems[idx].commits = commitsTmp
+          this.calendarItems[idx].percent = Number.parseFloat((commitsTmp.length / commits.length).toPrecision(1))
+        }
+      })
     })
   }
 
-  getNumberOfDays(year: number, month: number) {
-    return new Date(year, month, 0).getDate()
-  }
-
-  setItems() {
+  //Build items
+  setItems(year: number): CalendarComponent {
+    this.calendarItems = []
     let numberOfDays: number
     for (let month = 1; month <= 12; month++) {
-      numberOfDays = new Date(2018, month, 0).getDate()
+      numberOfDays = new Date(year, month, 0).getDate()
       for (let date = 1; date <= numberOfDays; date++) {
-        let dateValue = new Date(2018, (month-1), date).toISOString()
+        let dateValue = new Date(year, (month-1), date)
         this.calendarItems.push({
           date: dateValue,
+          commits: [],
+          percent: 0,
         })
       }
     }
+    return this
   }
 
 }

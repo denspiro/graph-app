@@ -1,2 +1,18 @@
-<p>view works!</p>
-<calendar></calendar>
+<div class="position-block">
+  <div class="d-flex">
+    <img src="assets/github_logo.svg" width="50px"/>
+    <h2>Commits during</h2>
+    <form class="d-flex" [formGroup]="requestForm" (ngSubmit)="getCommits()">
+      <input class="year" type=number placeholder="Enter year" formControlName="year">
+      <h2>in repo</h2>
+      <input class="url" type=string placeholder="Repo address" formControlName="repoUrl" (click)="$event.target.select()">
+      <button class="submit-button" type="submit" [disabled]="!requestForm.valid">
+        <h2 class="button-text">↵ Enter</h2>
+      </button>
+    </form>
+  </div>
+  <calendar
+    (requestChange)="getCommits($event)"
+    [response]="response">
+  </calendar>
+</div>
