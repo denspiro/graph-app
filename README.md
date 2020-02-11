@@ -1,6 +1,6 @@
 # GraphApp
 
-This is a simple app that fetches commits form provided repository for a provided year and visualise it in a github-kinda calendar. 
+This is a simple app that fetches commits form a provided repository for a provided year and visualise it in a github-kinda calendar. 
 
 ## NPM Install
 Install all npm dependencies `npm install`
