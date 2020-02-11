@@ -7,6 +7,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarItemComponent } from './calendar/calendar-item/calendar-item.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MonthsRowComponent } from './calendar/months-row/months-row.component';
+import { PopUpComponent } from './calendar/pop-up/pop-up.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { MonthsRowComponent } from './calendar/months-row/months-row.component';
     CalendarComponent,
     CalendarItemComponent,
     MonthsRowComponent,
+    PopUpComponent,
   ],
   imports: [
     BrowserModule,

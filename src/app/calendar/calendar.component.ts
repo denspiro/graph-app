@@ -47,7 +47,7 @@ export class CalendarComponent implements OnInit {
         if(commitData.commit.committer.date.substring(0,10) == calendarItem.date.toISOString().substring(0,10)) {
           commitsTmp.push(commitData.commit.committer.date)
           this.calendarItems[idx].commits = commitsTmp
-          this.calendarItems[idx].percent = Number.parseFloat((commitsTmp.length / commits.length).toPrecision(1))
+          this.calendarItems[idx].percent = Number.parseFloat(((commitsTmp.length / commits.length) * 100).toPrecision(2))
         }
       })
     })

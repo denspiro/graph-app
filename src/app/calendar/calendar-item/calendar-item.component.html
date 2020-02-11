@@ -1,10 +1,20 @@
+<pop-up [style.display]="popUpVisibility" [calendarItem]="calendarItem"></pop-up>
 <ng-container *ngIf="calendarItem.commits.length; else emptySet">
   <div
-    class="calendar-item-component calendar-item not-empty"
-    [style.opacity]="calendarItem.percent"
-    [title]="calendarItem.commits | json">
+    (mouseenter)="togglePopUp($event)"
+    (mouseleave)="togglePopUp($event)"
+    class="calendar-item-component calendar-item"
+    [class.less-than-ten]="calendarItem.percent > 0 && calendarItem.percent < 10"
+    [class.less-than-twenty]="calendarItem.percent >= 10 && calendarItem.percent < 20"
+    [class.less-than-fourty]="calendarItem.percent >= 20 && calendarItem.percent < 40"
+    [class.more-then-fourty]="calendarItem.percent >= 40">
   </div>
 </ng-container>
 <ng-template #emptySet>
-  <div class="calendar-item-component calendar-item empty" [title]="calendarItem.date"></div>
+  <div
+    (mouseenter)="togglePopUp($event)"
+    (mouseleave)="togglePopUp($event)"
+    class="calendar-item-component calendar-item empty">
+  </div>
 </ng-template>
+
