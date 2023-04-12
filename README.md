@@ -1,7 +1,10 @@
 # GraphApp
 
-This is a simple angular app that fetches commits form a provided repository for a provided year and visualise it in a github-kinda calendar. 
+This is a simple angular app that fetches commits form a provided repository for a provided year and visualise it in a heat-map calendar. 
 
+You can check the deployed version at https://denspiro.github.io/graph-app/
+
+# Starting project locally
 ## NPM Install
 Install all npm dependencies `npm install`
 
